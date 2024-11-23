@@ -27,14 +27,20 @@ def create_customer(customer: schemas.CustomerCreate, db: Session = Depends(get_
 
 
 @router.get("/", response_model=List[schemas.CustomerResponse])
-def read_customers(skip: int = 0, limit: int = 1000, db: Session = Depends(get_db)):
+def read_customers(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     """
-    Retrieve a list of customers.
+    Retrieve a paginated list of customers.
 
-    - **skip**: Number of records to skip (default is 0)
-    - **limit**: Maximum number of records to return (default is 10)
+    - **skip**: Number of records to skip for pagination (default: 0).
+    - **limit**: Maximum number of records to return (default: 10).
     """
-    customers = crud.get_customers(db=db)
+    if skip < 0 or limit < 1 or limit > 1000:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid pagination parameters. 'skip' must be >= 0 and 'limit' must be >= 1.",
+        )
+
+    customers = db.query(crud.Customer).offset(skip).limit(limit).all()
     return customers
 
 

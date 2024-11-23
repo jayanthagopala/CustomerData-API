@@ -241,3 +241,156 @@ def test_update_customer_duplicate_email(client):
     response = client.put("/customers/2", json={"email": "john.doe@example.com"})
     assert response.status_code == 400
     assert response.json()["detail"] == "A customer with this email already exists."
+
+
+@pytest.fixture(scope="function")
+def sample_customers(client):
+    """
+    Create sample customers for testing pagination.
+    Returns the client fixture after creating the test data.
+    """
+    # Create 15 sample customers
+    for i in range(15):
+        response = client.post(
+            "/customers/",
+            json={
+                "name": f"Customer {i}",
+                "email": f"customer{i}@example.com",
+                "age": 20 + i,
+            },
+        )
+        assert (
+            response.status_code == 200
+        )  # Verify each customer is created successfully
+
+    return client
+
+
+def test_get_customers_pagination(sample_customers):
+    """
+    Test pagination with `skip` and `limit` parameters.
+    """
+    client = sample_customers  # Get the client with pre-populated data
+
+    # Test case 1: First page (5 customers)
+    response = client.get("/customers/?skip=0&limit=5")
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 5
+    assert all(isinstance(customer, dict) for customer in data)
+    assert [customer["name"] for customer in data] == [
+        f"Customer {i}" for i in range(5)
+    ]
+
+    # Test case 2: Second page (5 customers)
+    response = client.get("/customers/?skip=5&limit=5")
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 5
+    assert [customer["name"] for customer in data] == [
+        f"Customer {i}" for i in range(5, 10)
+    ]
+
+    # Test case 3: Last page (partial)
+    response = client.get("/customers/?skip=10&limit=5")
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 5
+    assert [customer["name"] for customer in data] == [
+        f"Customer {i}" for i in range(10, 15)
+    ]
+
+    # Test case 4: Beyond available data
+    response = client.get("/customers/?skip=15&limit=5")
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 0
+    assert isinstance(data, list)
+
+
+def test_get_customers_default_pagination(sample_customers):
+    """
+    Test default pagination when no parameters are provided.
+    """
+    client = sample_customers
+
+    # Test default pagination (should return first 10 customers)
+    response = client.get("/customers/")
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 10  # Default limit should be 10
+    assert [customer["name"] for customer in data] == [
+        f"Customer {i}" for i in range(10)
+    ]
+
+
+def test_get_customers_invalid_pagination(sample_customers):
+    """
+    Test invalid pagination parameters.
+    """
+    client = sample_customers
+
+    # Test case 1: Negative skip
+    response = client.get("/customers/?skip=-5&limit=5")
+    assert response.status_code == 400
+    error_detail = response.json()["detail"]
+    assert (
+        "Invalid pagination parameters. 'skip' must be >= 0 and 'limit' must be >= 1."
+        in error_detail
+    )
+
+    # Test case 2: Negative limit
+    response = client.get("/customers/?skip=0&limit=-5")
+    assert response.status_code == 400
+    error_detail = response.json()["detail"]
+    assert (
+        "Invalid pagination parameters. 'skip' must be >= 0 and 'limit' must be >= 1."
+        in error_detail
+    )
+
+    # Test case 3: Zero limit
+    response = client.get("/customers/?skip=0&limit=0")
+    assert response.status_code == 400
+    error_detail = response.json()["detail"]
+    assert (
+        "Invalid pagination parameters. 'skip' must be >= 0 and 'limit' must be >= 1."
+        in error_detail
+    )
+
+    # Test case 4: Extremely large limit
+    response = client.get("/customers/?skip=0&limit=1001")
+    assert response.status_code == 400
+    error_detail = response.json()["detail"]
+    assert (
+        "Invalid pagination parameters. 'skip' must be >= 0 and 'limit' must be >= 1."
+        in error_detail
+    )
+
+
+def test_get_customers_edge_cases(sample_customers):
+    """
+    Test edge cases for pagination.
+    """
+    client = sample_customers
+
+    # Test case 1: Skip equals total records
+    response = client.get("/customers/?skip=15&limit=10")
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 0
+
+    # Test case 2: High skip with small limit
+    response = client.get("/customers/?skip=13&limit=5")
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 2  # Should only return the last 2 customers
+    assert [customer["name"] for customer in data] == ["Customer 13", "Customer 14"]
+
+    # Test case 3: Exact limit to end of data
+    response = client.get("/customers/?skip=10&limit=5")
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 5
+    assert [customer["name"] for customer in data] == [
+        f"Customer {i}" for i in range(10, 15)
+    ]

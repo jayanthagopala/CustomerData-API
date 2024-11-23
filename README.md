@@ -1,16 +1,76 @@
+# FastAPI-Based Customer Data Management System
 
-# FastAPI-API
+A Python-based project built with FastAPI, designed to deliver efficient and scalable APIs with a simple yet extensible structure.
 
-A Python-based FastAPI project designed for building efficient and scalable APIs with a simple yet extensible structure.
+- Provides endpoints for creating, retrieving, updating, and deleting customer records.
+- Supports advanced features such as filtering, pagination, and sorting to ensure efficient and flexible data retrieval.
 
 ---
 
-## 🚀 **Features**
-- FastAPI framework for building APIs.
-- Automatic data validation using Pydantic.
-- In-memory data storage for prototyping.
-- Designed with scalability in mind.
-- Pre-commit hooks for automated code formatting and quality checks.
+## 🛠️ **Endpoints Overview**
+
+### **1. Root**
+`GET /`
+Returns a welcome message.
+
+### **2. Customers**
+| Method | Endpoint                | Description                               |
+|--------|--------------------------|-------------------------------------------|
+| POST   | `/customers/`           | Create a new customer                     |
+| GET    | `/customers/`           | List customers with pagination support    |
+| GET    | `/customers/{id}`       | Retrieve a customer by ID                 |
+| DELETE | `/customers/{id}`       | Delete a customer by ID                   |
+
+#### **Pagination Parameters for `GET /customers/`**
+- **`skip`**: Number of records to skip (default: `0`).
+- **`limit`**: Maximum number of records to return (default: `10`).
+
+---
+
+## **Features**
+
+- **FastAPI Framework**:
+  - Built on FastAPI
+  - Provides built-in support for OpenAPI (Swagger UI) and ReDoc for interactive API documentation.
+
+- **Automatic Data Validation with Pydantic**:
+  - Ensures robust data validation for request and response payloads using Pydantic.
+  - Supports complex data types, type annotations, and field validation with clear error messages.
+
+- **Error Handling and Validation**:
+  - Built-in error handling for invalid request data (e.g., malformed JSON, missing required fields).
+  - Custom exception handling for meaningful error messages.
+
+- **In-Memory Data Storage (Prototyping)**:
+  - Supports rapid prototyping with an in-memory SQLite database for quick iteration.
+  - Configurable to use production-ready databases like PostgreSQL or MySQL.
+
+- **Scalable and Extensible Design**:
+  - Modular architecture with separate files for routing, database models, and schemas.
+  - Easily extendable to include more features or new endpoints.
+
+- **Pre-Commit Hooks for Code Quality**:
+  - Automates code formatting and quality checks using pre-commit hooks.
+  - Integrates tools like:
+    - **Black**: Ensures consistent code formatting.
+    - **Isort**: Automatically organizes imports.
+    - **Ruff**: Lints code for syntax and styling issues.
+    - **Trailing Whitespace Fixer**: Removes unnecessary whitespace.
+
+- **Testing Suite**:
+  - Comprehensive test cases for all endpoints using `pytest` and FastAPI's `TestClient`.
+  - Includes edge case testing, performance testing, and error handling validation.
+
+- **Environment Configuration**:
+  - `.env` file support for managing sensitive configurations like database URLs and environment settings.
+  - Separate configurations for development, testing, and production environments.
+
+- **Pagination and Filtering**:
+  - API supports pagination and filtering for endpoints that return lists of resources, ensuring efficient data handling.
+
+- **API Documentation**:
+  - Automatically generated interactive documentation via Swagger UI and ReDoc.
+  - Clear, well-organized documentation for all endpoints, with detailed descriptions of input and output.
 
 ---
 
@@ -111,22 +171,6 @@ pre-commit run --all-files
 
 ---
 
-## 🛠️ **Endpoints Overview**
-
-### **1. Root**
-`GET /`
-Returns a welcome message.
-
-### **2. Customers**
-| Method | Endpoint                | Description                 |
-|--------|--------------------------|-----------------------------|
-| POST   | `/customers/`           | Create a new customer       |
-| GET    | `/customers/`           | List all customers          |
-| GET    | `/customers/{id}`       | Retrieve a customer by ID   |
-| DELETE | `/customers/{id}`       | Delete a customer by ID     |
-
----
-
 ## 🛡️ **Pre-Commit Hooks**
 
 This project uses `pre-commit` hooks to automate code quality checks. They are configured in `.pre-commit-config.yaml`. Install the hooks with:
@@ -151,6 +195,7 @@ A Postman collection is provided to test the API.
 2. Update the base URL if necessary (e.g., `http://localhost:8000`).
 3. Use the pre-configured requests to test the API endpoints.
 
+---
 ## 📚 **API Documentation**
 
 FastAPI provides interactive API documentation for your project:
