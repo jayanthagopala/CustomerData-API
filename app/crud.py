@@ -46,18 +46,19 @@ def get_customers(db: Session):
 
 
 def update_customer(db: Session, customer_id: int, customer: CustomerUpdate):
-    """
-    Update an existing customer.
-    Only updates fields provided in the CustomerUpdate schema.
-    """
     db_customer = db.query(Customer).filter(Customer.id == customer_id).first()
     if not db_customer:
         raise HTTPException(
             status_code=404, detail=f"Customer with ID {customer_id} not found."
         )
 
-    # Update only provided fields
     customer_data = customer.model_dump(exclude_unset=True)
+
+    if not customer_data:  # Reject empty updates
+        raise HTTPException(
+            status_code=400, detail="At least one field must be provided for update."
+        )
+
     for key, value in customer_data.items():
         setattr(db_customer, key, value)
 

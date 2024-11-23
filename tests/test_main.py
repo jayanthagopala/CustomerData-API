@@ -166,3 +166,22 @@ def test_update_nonexistent_customer(client):
     assert response.status_code == 404  # Not Found
     data = response.json()
     assert data["detail"] == f"Customer with ID 999 not found."
+
+
+def test_empty_update_request(client):
+    # Create a customer to test updates
+    customer = {"name": "John Doe", "email": "john.doe@example.com", "age": 30}
+    create_response = client.post("/customers/", json=customer)
+    assert create_response.status_code == 200  # Customer created successfully
+    customer_id = create_response.json()["id"]
+
+    # Attempt to update with an empty request body
+    empty_update = {}
+    update_response = client.put(f"/customers/{customer_id}", json=empty_update)
+
+    # Assertions
+    assert update_response.status_code == 400  # Bad Request
+    assert (
+        update_response.json()["detail"]
+        == "At least one field must be provided for update."
+    )
