@@ -52,7 +52,9 @@ def update_customer(db: Session, customer_id: int, customer: CustomerUpdate):
     """
     db_customer = db.query(Customer).filter(Customer.id == customer_id).first()
     if not db_customer:
-        raise HTTPException(status_code=404, detail="Customer not found.")
+        raise HTTPException(
+            status_code=404, detail=f"Customer with ID {customer_id} not found."
+        )
 
     # Update only provided fields
     customer_data = customer.model_dump(exclude_unset=True)

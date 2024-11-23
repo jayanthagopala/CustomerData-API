@@ -134,3 +134,35 @@ def test_create_customer_missing_age(client):
         data["detail"]
         == "Request validation failed. Ensure all required fields are included."
     )
+
+
+def test_create_customer_duplicate_email(client):
+    # Create the first customer
+    first_customer = {"name": "John Doe", "email": "john.doe@example.com", "age": 30}
+    response = client.post("/customers/", json=first_customer)
+    assert response.status_code == 200  # Customer created successfully
+
+    # Attempt to create another customer with the same email
+    duplicate_customer = {
+        "name": "Jane Doe",
+        "email": "john.doe@example.com",  # Same email as the first customer
+        "age": 25,
+    }
+    response = client.post("/customers/", json=duplicate_customer)
+    assert response.status_code == 400  # HTTPException for duplicate email
+    assert response.json()["detail"] == "A customer with this email already exists."
+
+
+def test_update_nonexistent_customer(client):
+    # Attempt to update a customer that doesn't exist
+    customer_update = {
+        "name": "Updated Name",
+        "email": "updated.email@example.com",
+        "age": 35,
+    }
+    response = client.put("/customers/999", json=customer_update)  # Non-existent ID
+
+    # Assertions
+    assert response.status_code == 404  # Not Found
+    data = response.json()
+    assert data["detail"] == f"Customer with ID 999 not found."
