@@ -18,4 +18,4 @@ app = FastAPI(
 )
 
 # Include routers
-app.include_router(customers.router, prefix="/customers", tags=["customers"])
+app.include_router(customers.router)

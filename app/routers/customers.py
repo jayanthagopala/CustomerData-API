@@ -20,6 +20,7 @@ def create_customer(customer: schemas.CustomerCreate, db: Session = Depends(get_
     - **email**: A valid email address
     - **age**: The age of the customer
     """
+    print(f"Creating customer: {customer}")
     return crud.create_customer(db=db, customer=customer)
 
 
