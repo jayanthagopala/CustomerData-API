@@ -7,7 +7,15 @@ from .routers import customers
 Base.metadata.create_all(bind=engine)
 
 # Create FastAPI app
-app = FastAPI()
+app = FastAPI(
+    title="FastAPI Customer Management API",
+    description="API for managing customers",
+    version="1.0.0",
+    contact={
+        "name": "Jay",
+        "email": "jaijayanth@gmail.com",
+    },
+)
 
 # Include routers
 app.include_router(customers.router, prefix="/customers", tags=["customers"])
