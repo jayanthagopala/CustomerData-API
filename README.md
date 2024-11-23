@@ -143,7 +143,7 @@ pre-commit install
 
 ---
 
-## Postman Collection
+## 📫 **Postman Collection**
 A Postman collection is provided to test the API.
 
 **Steps to Use**:
