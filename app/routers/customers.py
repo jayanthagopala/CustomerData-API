@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -22,6 +24,18 @@ def create_customer(customer: schemas.CustomerCreate, db: Session = Depends(get_
     """
     print(f"Creating customer: {customer}")
     return crud.create_customer(db=db, customer=customer)
+
+
+@router.get("/", response_model=List[schemas.CustomerResponse])
+def read_customers(skip: int = 0, limit: int = 1000, db: Session = Depends(get_db)):
+    """
+    Retrieve a list of customers.
+
+    - **skip**: Number of records to skip (default is 0)
+    - **limit**: Maximum number of records to return (default is 10)
+    """
+    customers = crud.get_customers(db=db)
+    return customers
 
 
 @router.get("/{customer_id}", response_model=schemas.CustomerResponse)
