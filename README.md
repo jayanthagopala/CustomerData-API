@@ -150,3 +150,13 @@ A Postman collection is provided to test the API.
 1. Import the file located at `postman/FastAPI-API-Postman-Collection.json` into Postman.
 2. Update the base URL if necessary (e.g., `http://localhost:8000`).
 3. Use the pre-configured requests to test the API endpoints.
+
+## 📚 **API Documentation**
+
+FastAPI provides interactive API documentation for your project:
+
+- **Swagger UI**: Interactive and easy-to-use API documentation.
+  Access it at: [http://localhost:8000/docs](http://localhost:8000/docs)
+
+- **ReDoc**: Comprehensive and clean API documentation.
+  Access it at: [http://localhost:8000/redoc](http://localhost:8000/redoc)
