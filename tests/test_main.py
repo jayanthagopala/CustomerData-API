@@ -88,4 +88,49 @@ def test_create_customer_invalid_data(client):
     assert response.status_code == 422  # Validation error
 
 
-# Add more tests as needed
+def test_create_customer_missing_email(client):
+    # Test data with missing email
+    customer_data = {"name": "John Doe", "age": 30}
+
+    # Make request
+    response = client.post("/customers/", json=customer_data)
+
+    # Assertions
+    assert response.status_code == 422  # Validation error
+    data = response.json()
+    assert (
+        data["detail"]
+        == "Request validation failed. Ensure all required fields are included."
+    )
+
+
+def test_create_customer_missing_name(client):
+    # Test data with missing name
+    customer_data = {"email": "john.doe@example.com", "age": 30}
+
+    # Make request
+    response = client.post("/customers/", json=customer_data)
+
+    # Assertions
+    assert response.status_code == 422  # Validation error
+    data = response.json()
+    assert (
+        data["detail"]
+        == "Request validation failed. Ensure all required fields are included."
+    )
+
+
+def test_create_customer_missing_age(client):
+    # Test data with missing age
+    customer_data = {"name": "John Doe", "email": "john.doe@example.com"}
+
+    # Make request
+    response = client.post("/customers/", json=customer_data)
+
+    # Assertions
+    assert response.status_code == 422  # Validation error
+    data = response.json()
+    assert (
+        data["detail"]
+        == "Request validation failed. Ensure all required fields are included."
+    )

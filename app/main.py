@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 
 from .database import Base, engine
 from .routers import customers
@@ -16,6 +18,18 @@ app = FastAPI(
         "email": "jaijayanth@gmail.com",
     },
 )
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc):
+    return JSONResponse(
+        status_code=422,
+        content={
+            "detail": "Request validation failed. Ensure all required fields are included.",
+            "errors": exc.errors(),
+        },
+    )
+
 
 # Include routers
 app.include_router(customers.router)
