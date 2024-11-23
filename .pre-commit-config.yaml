@@ -20,9 +20,3 @@ repos:
     rev: 5.13.2
     hooks:
     -   id: isort
-
--   repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.8.0
-    hooks:
-    -   id: ruff
-        args: [--fix]
