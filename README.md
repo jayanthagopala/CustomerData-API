@@ -142,3 +142,11 @@ pre-commit install
 - **End of File Fixer**: Ensures a single newline at the end of files.
 
 ---
+
+## Postman Collection
+A Postman collection is provided to test the API.
+
+**Steps to Use**:
+1. Import the file located at `postman/FastAPI-API-Postman-Collection.json` into Postman.
+2. Update the base URL if necessary (e.g., `http://localhost:8000`).
+3. Use the pre-configured requests to test the API endpoints.

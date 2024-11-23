@@ -1,0 +1,113 @@
+{
+    "info": {
+        "name": "FastAPI-API Collection",
+        "_postman_id": "fastapi-collection-id",
+        "description": "Postman collection to test FastAPI CRUD operations for customers.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Create Customer",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\"name\": \"John Doe\", \"email\": \"john.doe@example.com\", \"age\": 30}"
+                },
+                "url": {
+                    "raw": "http://localhost:8000/customers/",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "customers"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Get All Customers",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "http://localhost:8000/customers/",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "customers"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Get Customer by ID",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "http://localhost:8000/customers/1",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "customers",
+                        "1"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Update Customer",
+            "request": {
+                "method": "PUT",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\"name\": \"Jane Doe\", \"email\": \"jane.doe@example.com\", \"age\": 32}"
+                },
+                "url": {
+                    "raw": "http://localhost:8000/customers/1",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "customers",
+                        "1"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Delete Customer",
+            "request": {
+                "method": "DELETE",
+                "url": {
+                    "raw": "http://localhost:8000/customers/1",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "customers",
+                        "1"
+                    ]
+                }
+            }
+        }
+    ]
+}
