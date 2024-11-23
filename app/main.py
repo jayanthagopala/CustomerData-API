@@ -1,18 +1,37 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, HTTPException
 
-app = FastAPI(title="FastAPI Project")
+from app.schemas import Customer
 
-# Add CORS middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+app = FastAPI()
+
+# In-memory data store
+customers = {}
 
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "Welcome to the FastAPI Customer API"}
+
+
+@app.post("/customers/", response_model=Customer)
+async def create_customer(customer: Customer):
+    if customer.id in customers:
+        raise HTTPException(status_code=400, detail="Customer already exists")
+    customers[customer.id] = customer
+    return customer
+
+
+@app.get("/customers/{customer_id}", response_model=Customer)
+async def get_customer(customer_id: int):
+    customer = customers.get(customer_id)
+    if not customer:
+        raise HTTPException(status_code=404, detail="Customer not found")
+    return customer
+
+
+@app.delete("/customers/{customer_id}", response_model=Customer)
+async def delete_customer(customer_id: int):
+    customer = customers.pop(customer_id, None)
+    if not customer:
+        raise HTTPException(status_code=404, detail="Customer not found")
+    return customer
