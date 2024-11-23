@@ -58,6 +58,20 @@ def update_customer(db: Session, customer_id: int, customer: CustomerUpdate):
         raise HTTPException(
             status_code=400, detail="At least one field must be provided for update."
         )
+    # Check for duplicate email
+    if "email" in customer_data:
+        existing_customer = (
+            db.query(Customer)
+            .filter(
+                Customer.email == customer_data["email"], Customer.id != customer_id
+            )
+            .first()
+        )
+        if existing_customer:
+            raise HTTPException(
+                status_code=400,
+                detail="A customer with this email already exists.",
+            )
 
     for key, value in customer_data.items():
         setattr(db_customer, key, value)

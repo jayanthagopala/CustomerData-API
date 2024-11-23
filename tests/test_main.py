@@ -228,3 +228,16 @@ def test_double_deletion(client):
     assert (
         delete_response.json()["detail"] == f"Customer with ID {customer_id} not found."
     )
+
+
+def test_update_customer_duplicate_email(client):
+    # Create two customers
+    customer1 = {"name": "John Doe", "email": "john.doe@example.com", "age": 30}
+    customer2 = {"name": "Jane Doe", "email": "jane.doe@example.com", "age": 25}
+    client.post("/customers/", json=customer1)
+    client.post("/customers/", json=customer2)
+
+    # Attempt to update the second customer's email to the first customer's email
+    response = client.put("/customers/2", json={"email": "john.doe@example.com"})
+    assert response.status_code == 400
+    assert response.json()["detail"] == "A customer with this email already exists."
