@@ -73,7 +73,9 @@ def delete_customer(db: Session, customer_id: int):
     """
     db_customer = db.query(Customer).filter(Customer.id == customer_id).first()
     if not db_customer:
-        raise HTTPException(status_code=404, detail="Customer not found.")
+        raise HTTPException(
+            status_code=404, detail=f"Customer with ID {customer_id} not found."
+        )
 
     db.delete(db_customer)
     db.commit()

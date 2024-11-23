@@ -1,6 +1,7 @@
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
+from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
@@ -184,4 +185,46 @@ def test_empty_update_request(client):
     assert (
         update_response.json()["detail"]
         == "At least one field must be provided for update."
+    )
+
+
+def test_delete_nonexistent_customer(client):
+    # Attempt to delete a customer that doesn't exist
+    response = client.delete("/customers/999")  # Non-existent ID
+
+    # Assertions
+    assert response.status_code == 404  # Not Found
+    data = response.json()
+    assert data["detail"] == "Customer with ID 999 not found."
+
+
+def test_delete_existing_customer(client):
+    # Create a customer
+    customer = {"name": "John Doe", "email": "john.doe@example.com", "age": 30}
+    create_response = client.post("/customers/", json=customer)
+    assert create_response.status_code == 200
+    customer_id = create_response.json()["id"]
+
+    # Delete the customer
+    delete_response = client.delete(f"/customers/{customer_id}")
+    assert delete_response.status_code == 200
+    assert delete_response.json() == {"message": "Customer deleted successfully"}
+
+
+def test_double_deletion(client):
+    # Create a customer
+    customer = {"name": "John Doe", "email": "john.doe@example.com", "age": 30}
+    create_response = client.post("/customers/", json=customer)
+    assert create_response.status_code == 200
+    customer_id = create_response.json()["id"]
+
+    # Delete the customer
+    delete_response = client.delete(f"/customers/{customer_id}")
+    assert delete_response.status_code == 200
+
+    # Try to delete the same customer again
+    delete_response = client.delete(f"/customers/{customer_id}")
+    assert delete_response.status_code == 404
+    assert (
+        delete_response.json()["detail"] == f"Customer with ID {customer_id} not found."
     )
