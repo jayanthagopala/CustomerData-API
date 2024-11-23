@@ -17,3 +17,9 @@ def test_create_customer():
     )
     assert response.status_code == 200
     assert response.json() == {"id": 1, "name": "John Doe", "email": "john@example.com"}
+
+
+def test_get_customer():
+    response = client.get("/customers/1")
+    assert response.status_code == 200
+    assert response.json() == {"id": 1, "name": "John Doe", "email": "john@example.com"}
