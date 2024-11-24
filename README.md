@@ -41,14 +41,6 @@ Returns a welcome message.
   - Built-in error handling for invalid request data (e.g., malformed JSON, missing required fields).
   - Custom exception handling for meaningful error messages.
 
-- **In-Memory Data Storage (Prototyping)**:
-  - Supports rapid prototyping with an in-memory SQLite database for quick iteration.
-  - Configurable to use production-ready databases like PostgreSQL or MySQL.
-
-- **Scalable and Extensible Design**:
-  - Modular architecture with separate files for routing, database models, and schemas.
-  - Easily extendable to include more features or new endpoints.
-
 - **Pre-Commit Hooks for Code Quality**:
   - Automates code formatting and quality checks using pre-commit hooks.
   - Integrates tools like:
