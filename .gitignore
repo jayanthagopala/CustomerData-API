@@ -3,6 +3,4 @@ __pycache__/
 .env
 .venv/
 customers.db
-app/__pycache__/*
-app/__pycache__/main.cpython-311.pyc
-app/__pycache__/main.cpython-311.pyc
+app/__pycache__/
