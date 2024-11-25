@@ -3,11 +3,15 @@ from sqlalchemy import create_engine
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import declarative_base, sessionmaker
 
+from app.utils.logger import setup_logger
+
 DATABASE_URL = "sqlite:///./customers.db"
 
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
+
+crud_logger = setup_logger("crud-operations", "crud.log")
 
 
 def get_db():
@@ -15,6 +19,7 @@ def get_db():
         db = SessionLocal()
         yield db
     except OperationalError as e:
+        crud_logger.error(f"Database connection failed: {e}")
         raise HTTPException(
             status_code=500,
             detail="Database connection failed. Please try again later.",

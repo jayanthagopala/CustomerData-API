@@ -5,6 +5,9 @@ from sqlalchemy.orm import Session
 
 from .. import crud, schemas
 from ..database import get_db
+from ..utils.logger import setup_logger
+
+router_logger = setup_logger("router-operations", "router.log")
 
 router = APIRouter(
     prefix="/customers",
@@ -22,7 +25,7 @@ def create_customer(customer: schemas.CustomerCreate, db: Session = Depends(get_
     - **email**: A valid email address
     - **age**: The age of the customer
     """
-    print(f"Creating customer: {customer}")
+    router_logger.debug(f"Creating customer: {customer}")
     return crud.create_customer(db=db, customer=customer)
 
 
@@ -34,7 +37,13 @@ def read_customers(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)
     - **skip**: Number of records to skip for pagination (default: 0).
     - **limit**: Maximum number of records to return (default: 10).
     """
+    router_logger.debug(
+        f"Retrieving customers with pagination: skip={skip}, limit={limit}"
+    )
     if skip < 0 or limit < 1 or limit > 1000:
+        router_logger.error(
+            f"Invalid pagination parameters: skip={skip}, limit={limit}"
+        )
         raise HTTPException(
             status_code=400,
             detail="Invalid pagination parameters. 'skip' must be >= 0 and 'limit' must be >= 1.",
@@ -51,8 +60,10 @@ def read_customer(customer_id: int, db: Session = Depends(get_db)):
 
     - **customer_id**: The ID of the customer to retrieve
     """
+    router_logger.debug(f"Retrieving customer with ID {customer_id}")
     customer = crud.get_customer(db=db, customer_id=customer_id)
     if not customer:
+        router_logger.error(f"Customer with ID {customer_id} not found")
         raise HTTPException(status_code=404, detail="Customer not found")
     return customer
 
@@ -69,10 +80,12 @@ def update_customer(
     - **email**: Updated email (optional)
     - **age**: Updated age (optional)
     """
+    router_logger.debug(f"Updating customer with ID {customer_id}: {customer}")
     updated_customer = crud.update_customer(
         db=db, customer_id=customer_id, customer=customer
     )
     if not updated_customer:
+        router_logger.error(f"Customer with ID {customer_id} not found")
         raise HTTPException(status_code=404, detail="Customer not found")
     return updated_customer
 
@@ -84,7 +97,9 @@ def delete_customer(customer_id: int, db: Session = Depends(get_db)):
 
     - **customer_id**: The ID of the customer to delete
     """
+    router_logger.debug(f"Deleting customer with ID {customer_id}")
     success = crud.delete_customer(db=db, customer_id=customer_id)
     if not success:
+        router_logger.error(f"Customer with ID {customer_id} not found")
         raise HTTPException(status_code=404, detail="Customer not found")
     return {"message": "Customer deleted successfully"}
