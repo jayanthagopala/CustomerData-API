@@ -1,17 +1,19 @@
 import logging
+import time
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 from .database import Base, engine
 from .routers import customers
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
-logger = logging.getLogger(__name__)
+# main.py
+from .utils.logger import setup_logger
+
+# Setup API logger
+api_logger = setup_logger("fastapi-api", "api.log", level=logging.INFO)
+
 
 # Initialize database
 Base.metadata.create_all(bind=engine)
@@ -37,6 +39,20 @@ async def validation_exception_handler(request, exc):
             "errors": exc.errors(),
         },
     )
+
+
+# Add logging middleware to FastAPI app
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    start_time = time.time()
+    response = await call_next(request)
+    duration = time.time() - start_time
+
+    api_logger.info(
+        f"Method: {request.method} Path: {request.url.path} "
+        f"Status: {response.status_code} Duration: {duration:.2f}s"
+    )
+    return response
 
 
 # Include routers
