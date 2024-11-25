@@ -9,4 +9,4 @@ class Customer(Base):
     id = Column(Integer, primary_key=True, index=True)
     first_name = Column(String, index=True, nullable=False)
     last_name = Column(String, index=True, nullable=False)
-    date_of_birth = Column(Date, nullable=False)
+    date_of_birth = Column(Date, index=True, nullable=False)

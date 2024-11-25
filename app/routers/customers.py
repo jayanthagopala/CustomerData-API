@@ -32,27 +32,41 @@ def create_customer(customer: schemas.CustomerCreate, db: Session = Depends(get_
 
 
 @router.get("/", response_model=List[schemas.CustomerResponse])
-def read_customers(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+def read_customers(
+    skip: int = 0,
+    limit: int = 10,
+    start_date: str = None,
+    end_date: str = None,
+    db: Session = Depends(get_db),
+):
     """
     Retrieve a paginated list of customers.
 
     - **skip**: Number of records to skip for pagination (default: 0).
     - **limit**: Maximum number of records to return (default: 10).
+    - **start_date**: Start of the date range (YYYY-MM-DD).
+    - **end_date**: End of the date range (YYYY-MM-DD).
     """
-    router_logger.debug(
-        f"Retrieving customers with pagination: skip={skip}, limit={limit}"
-    )
-    if skip < 0 or limit < 1 or limit > 1000:
-        router_logger.error(
-            f"Invalid pagination parameters: skip={skip}, limit={limit}"
+    if start_date and end_date:
+        return crud.get_customers_by_date_range(
+            db=db, start_date=start_date, end_date=end_date
         )
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid pagination parameters. 'skip' must be >= 0 and 'limit' must be >= 1.",
+    else:
+        # Existing pagination logic
+        router_logger.debug(
+            f"Retrieving customers with pagination: skip={skip}, limit={limit}"
         )
+        if skip < 0 or limit < 1 or limit > 1000:
+            router_logger.error(
+                f"Invalid pagination parameters: skip={skip}, limit={limit}"
+            )
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid pagination parameters. 'skip' must be >= 0 and 'limit' must be >= 1.",
+            )
 
-    customers = crud.get_customers(db=db, skip=skip, limit=limit)
-    return customers
+        customers = crud.get_customers(db=db, skip=skip, limit=limit)
+        return customers
 
 
 @router.get("/{customer_id}", response_model=schemas.CustomerResponse)
