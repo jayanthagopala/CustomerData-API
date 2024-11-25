@@ -7,7 +7,7 @@
     },
     "item": [
         {
-            "name": "Create Customer",
+            "name": "Create Customer - Valid Input",
             "request": {
                 "method": "POST",
                 "header": [
@@ -33,9 +33,19 @@
             }
         },
         {
-            "name": "Get All Customers",
+            "name": "Create Customer - Missing Fields",
             "request": {
-                "method": "GET",
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\"name\": \"John Doe\"}"
+                },
                 "url": {
                     "raw": "http://localhost:8000/customers/",
                     "host": [
@@ -49,24 +59,76 @@
             }
         },
         {
-            "name": "Get Customer by ID",
+            "name": "Create Customer - Invalid Email",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\"name\": \"Invalid Email\", \"email\": \"invalid_email\", \"age\": 25}"
+                },
+                "url": {
+                    "raw": "http://localhost:8000/customers/",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "customers"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Get All Customers - With Pagination",
             "request": {
                 "method": "GET",
                 "url": {
-                    "raw": "http://localhost:8000/customers/1",
+                    "raw": "http://localhost:8000/customers/?skip=0&limit=10",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "customers"
+                    ],
+                    "query": [
+                        {
+                            "key": "skip",
+                            "value": "0"
+                        },
+                        {
+                            "key": "limit",
+                            "value": "10"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Get Customer by ID - Nonexistent ID",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "http://localhost:8000/customers/999",
                     "host": [
                         "localhost"
                     ],
                     "port": "8000",
                     "path": [
                         "customers",
-                        "1"
+                        "999"
                     ]
                 }
             }
         },
         {
-            "name": "Update Customer",
+            "name": "Update Customer - Partial Update",
             "request": {
                 "method": "PUT",
                 "header": [
@@ -77,7 +139,7 @@
                 ],
                 "body": {
                     "mode": "raw",
-                    "raw": "{\"name\": \"Jane Doe\", \"email\": \"jane.doe@example.com\", \"age\": 32}"
+                    "raw": "{\"name\": \"Updated Name\"}"
                 },
                 "url": {
                     "raw": "http://localhost:8000/customers/1",
@@ -93,7 +155,51 @@
             }
         },
         {
-            "name": "Delete Customer",
+            "name": "Update Customer - Duplicate Email",
+            "request": {
+                "method": "PUT",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\"email\": \"john.doe@example.com\"}"
+                },
+                "url": {
+                    "raw": "http://localhost:8000/customers/2",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "customers",
+                        "2"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Delete Customer - Nonexistent ID",
+            "request": {
+                "method": "DELETE",
+                "url": {
+                    "raw": "http://localhost:8000/customers/999",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "customers",
+                        "999"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Delete Customer - Valid",
             "request": {
                 "method": "DELETE",
                 "url": {
