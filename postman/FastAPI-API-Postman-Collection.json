@@ -18,7 +18,7 @@
                 ],
                 "body": {
                     "mode": "raw",
-                    "raw": "{\"name\": \"John Doe\", \"email\": \"john.doe@example.com\", \"age\": 30}"
+                    "raw": "{\"first_name\": \"John\", \"last_name\": \"Doe\", \"date_of_birth\": \"1990-01-01\"}"
                 },
                 "url": {
                     "raw": "http://localhost:8000/customers/",
@@ -44,33 +44,7 @@
                 ],
                 "body": {
                     "mode": "raw",
-                    "raw": "{\"name\": \"John Doe\"}"
-                },
-                "url": {
-                    "raw": "http://localhost:8000/customers/",
-                    "host": [
-                        "localhost"
-                    ],
-                    "port": "8000",
-                    "path": [
-                        "customers"
-                    ]
-                }
-            }
-        },
-        {
-            "name": "Create Customer - Invalid Email",
-            "request": {
-                "method": "POST",
-                "header": [
-                    {
-                        "key": "Content-Type",
-                        "value": "application/json"
-                    }
-                ],
-                "body": {
-                    "mode": "raw",
-                    "raw": "{\"name\": \"Invalid Email\", \"email\": \"invalid_email\", \"age\": 25}"
+                    "raw": "{\"first_name\": \"John\"}"
                 },
                 "url": {
                     "raw": "http://localhost:8000/customers/",
@@ -139,7 +113,7 @@
                 ],
                 "body": {
                     "mode": "raw",
-                    "raw": "{\"name\": \"Updated Name\"}"
+                    "raw": "{\"first_name\": \"UpdatedName\"}"
                 },
                 "url": {
                     "raw": "http://localhost:8000/customers/1",
@@ -150,33 +124,6 @@
                     "path": [
                         "customers",
                         "1"
-                    ]
-                }
-            }
-        },
-        {
-            "name": "Update Customer - Duplicate Email",
-            "request": {
-                "method": "PUT",
-                "header": [
-                    {
-                        "key": "Content-Type",
-                        "value": "application/json"
-                    }
-                ],
-                "body": {
-                    "mode": "raw",
-                    "raw": "{\"email\": \"john.doe@example.com\"}"
-                },
-                "url": {
-                    "raw": "http://localhost:8000/customers/2",
-                    "host": [
-                        "localhost"
-                    ],
-                    "port": "8000",
-                    "path": [
-                        "customers",
-                        "2"
                     ]
                 }
             }

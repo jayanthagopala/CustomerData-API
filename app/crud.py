@@ -16,27 +16,17 @@ def get_customer(db: Session, customer_id: int):
     return db.query(Customer).filter(Customer.id == customer_id).first()
 
 
-def get_customer_by_email(db: Session, email: str):
-    """
-    Retrieve a customer by their email.
-    """
-    crud_logger.debug(f"Retrieving customer with email {email}")
-    return db.query(Customer).filter(Customer.email == email).first()
-
-
 def create_customer(db: Session, customer: CustomerCreate):
     """
     Create a new customer.
-    If a customer with the same email already exists, raises an exception.
     """
-    crud_logger.debug(f"Creating customer with email {customer.email}")
-    existing_customer = get_customer_by_email(db, customer.email)
-    if existing_customer:
-        raise HTTPException(
-            status_code=400, detail="A customer with this email already exists."
-        )
+    crud_logger.debug(
+        f"Creating customer: first_name={customer.first_name}, last_name={customer.last_name}"
+    )
     new_customer = Customer(
-        **customer.model_dump()  # Use model_dump() to handle Pydantic models properly
+        first_name=customer.first_name,
+        last_name=customer.last_name,
+        date_of_birth=customer.date_of_birth,
     )
     db.add(new_customer)
     db.commit()
@@ -44,18 +34,22 @@ def create_customer(db: Session, customer: CustomerCreate):
     return new_customer
 
 
-def get_customers(db: Session):
+def get_customers(db: Session, skip: int = 0, limit: int = 10):
     """
-    Retrieve all customers.
+    Retrieve a paginated list of customers.
     """
-    crud_logger.debug("Retrieving all customers")
-    return db.query(Customer).all()
+    crud_logger.debug(f"Retrieving customers with skip={skip}, limit={limit}")
+    return db.query(Customer).offset(skip).limit(limit).all()
 
 
 def update_customer(db: Session, customer_id: int, customer: CustomerUpdate):
+    """
+    Update an existing customer.
+    """
     crud_logger.debug(f"Updating customer with ID {customer_id}")
     db_customer = db.query(Customer).filter(Customer.id == customer_id).first()
     if not db_customer:
+        crud_logger.error(f"Customer with ID {customer_id} not found.")
         raise HTTPException(
             status_code=404, detail=f"Customer with ID {customer_id} not found."
         )
@@ -67,23 +61,6 @@ def update_customer(db: Session, customer_id: int, customer: CustomerUpdate):
         raise HTTPException(
             status_code=400, detail="At least one field must be provided for update."
         )
-    # Check for duplicate email
-    if "email" in customer_data:
-        existing_customer = (
-            db.query(Customer)
-            .filter(
-                Customer.email == customer_data["email"], Customer.id != customer_id
-            )
-            .first()
-        )
-        if existing_customer:
-            crud_logger.error(
-                f"Customer with email {customer_data['email']} already exists."
-            )
-            raise HTTPException(
-                status_code=400,
-                detail="A customer with this email already exists.",
-            )
 
     for key, value in customer_data.items():
         setattr(db_customer, key, value)
@@ -97,6 +74,7 @@ def delete_customer(db: Session, customer_id: int):
     """
     Delete a customer by ID.
     """
+    crud_logger.debug(f"Deleting customer with ID {customer_id}")
     db_customer = db.query(Customer).filter(Customer.id == customer_id).first()
     if not db_customer:
         crud_logger.error(f"Customer with ID {customer_id} not found.")

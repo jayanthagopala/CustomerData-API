@@ -21,9 +21,9 @@ def create_customer(customer: schemas.CustomerCreate, db: Session = Depends(get_
     """
     Create a new customer.
 
-    - **name**: The name of the customer
-    - **email**: A valid email address
-    - **age**: The age of the customer
+    - **first_name**: The first name of the customer.
+    - **last_name**: The last name of the customer.
+    - **date_of_birth**: The date of birth of the customer (YYYY-MM-DD).
     """
     router_logger.debug(f"Creating customer: {customer}")
     return crud.create_customer(db=db, customer=customer)
@@ -49,7 +49,7 @@ def read_customers(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)
             detail="Invalid pagination parameters. 'skip' must be >= 0 and 'limit' must be >= 1.",
         )
 
-    customers = db.query(crud.Customer).offset(skip).limit(limit).all()
+    customers = crud.get_customers(db=db, skip=skip, limit=limit)
     return customers
 
 
@@ -58,7 +58,7 @@ def read_customer(customer_id: int, db: Session = Depends(get_db)):
     """
     Retrieve a customer's details by ID.
 
-    - **customer_id**: The ID of the customer to retrieve
+    - **customer_id**: The ID of the customer to retrieve.
     """
     router_logger.debug(f"Retrieving customer with ID {customer_id}")
     customer = crud.get_customer(db=db, customer_id=customer_id)
@@ -75,10 +75,10 @@ def update_customer(
     """
     Update an existing customer.
 
-    - **customer_id**: The ID of the customer to update
-    - **name**: Updated name (optional)
-    - **email**: Updated email (optional)
-    - **age**: Updated age (optional)
+    - **customer_id**: The ID of the customer to update.
+    - **first_name**: Updated first name (optional).
+    - **last_name**: Updated last name (optional).
+    - **date_of_birth**: Updated date of birth (optional, YYYY-MM-DD).
     """
     router_logger.debug(f"Updating customer with ID {customer_id}: {customer}")
     updated_customer = crud.update_customer(
@@ -95,7 +95,7 @@ def delete_customer(customer_id: int, db: Session = Depends(get_db)):
     """
     Delete a customer by ID.
 
-    - **customer_id**: The ID of the customer to delete
+    - **customer_id**: The ID of the customer to delete.
     """
     router_logger.debug(f"Deleting customer with ID {customer_id}")
     success = crud.delete_customer(db=db, customer_id=customer_id)
