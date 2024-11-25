@@ -187,6 +187,10 @@ A Postman collection is provided to test the API.
 2. Update the base URL if necessary (e.g., `http://localhost:8000`).
 3. Use the pre-configured requests to test the API endpoints.
 
+## 📫 **Performance tests for the API**
+Locust based tests can be used to load and stress test the API.
+- [Performance Tests Documentation](performance_tests/README.md)
+
 ---
 ## 📚 **API Documentation**
 
