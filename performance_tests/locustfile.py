@@ -1,4 +1,3 @@
-import json
 import random
 from typing import Dict, Optional
 
@@ -14,9 +13,9 @@ class CustomerAPIUser(HttpUser):
         self.created_customer_ids = []
         self.test_customers = [
             {
-                "name": f"Test User {i}",
-                "email": f"test{i}@example.com",
-                "age": random.randint(18, 80),
+                "first_name": f"TestFirstName{i}",
+                "last_name": f"TestLastName{i}",
+                "date_of_birth": f"19{random.randint(50, 99)}-01-{random.randint(10, 28)}",
             }
             for i in range(100)  # Pre-generate 100 test users
         ]
@@ -30,7 +29,7 @@ class CustomerAPIUser(HttpUser):
         with self.client.post(
             "/customers/", json=customer_data, catch_response=True
         ) as response:
-            if response.status_code == 200:
+            if response.status_code == 201:  # Resource created
                 customer_id = response.json().get("id")
                 if customer_id:
                     self.created_customer_ids.append(customer_id)
@@ -65,8 +64,8 @@ class CustomerAPIUser(HttpUser):
 
         customer_id = random.choice(self.created_customer_ids)
         update_data = {
-            "name": f"Updated User {random.randint(1, 1000)}",
-            "age": random.randint(18, 80),
+            "first_name": f"UpdatedFirstName{random.randint(1, 1000)}",
+            "last_name": f"UpdatedLastName{random.randint(1, 1000)}",
         }
 
         with self.client.put(
@@ -116,9 +115,8 @@ class CustomerAPIUser(HttpUser):
     def create_invalid_customer(self):
         """Attempt to create a customer with invalid data."""
         invalid_data = {
-            "name": "Invalid User",
-            # Missing required email field
-            "age": "invalid_age",  # Invalid age type
+            "first_name": "InvalidFirstName",
+            # Missing required last_name and date_of_birth fields
         }
 
         with self.client.post(

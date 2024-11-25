@@ -13,13 +13,16 @@ A Python-based project built with FastAPI, designed to deliver efficient and sca
 `GET /`
 Returns a welcome message.
 
-### **2. Customers**
-| Method | Endpoint                | Description                               |
-|--------|--------------------------|-------------------------------------------|
-| POST   | `/customers/`           | Create a new customer                     |
-| GET    | `/customers/`           | List customers with pagination support    |
-| GET    | `/customers/{id}`       | Retrieve a customer by ID                 |
-| DELETE | `/customers/{id}`       | Delete a customer by ID                   |
+### Endpoint Overview
+| Method | Endpoint                | Description                               | Request Body (JSON)                                                                                   |
+|--------|--------------------------|-------------------------------------------|-------------------------------------------------------------------------------------------------------|
+| POST   | `/customers/`           | Create a new customer                     | `{ "first_name": "string", "last_name": "string", "date_of_birth": "string (YYYY-MM-DD)" }`          |
+| GET    | `/customers/`           | List customers with pagination support    | _N/A_                                                                                                |
+| GET    | `/customers/{id}`       | Retrieve a customer by ID                 | _N/A_                                                                                                |
+| PUT    | `/customers/{id}`       | Update an existing customer by ID         | `{ "first_name": "string", "last_name": "string", "date_of_birth": "string (YYYY-MM-DD)" }`          |
+| DELETE | `/customers/{id}`       | Delete a customer by ID                   | _N/A_                                                                                                |
+
+---
 
 #### **Pagination Parameters for `GET /customers/`**
 - **`skip`**: Number of records to skip (default: `0`).

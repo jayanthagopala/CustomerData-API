@@ -63,7 +63,7 @@ def test_create_customer(client):
     response = client.post("/customers/", json=customer_data)
 
     # Assertions
-    assert response.status_code == 200  # Resource created
+    assert response.status_code == 201  # Resource created
     data = response.json()
     assert data["first_name"] == customer_data["first_name"]
     assert data["last_name"] == customer_data["last_name"]

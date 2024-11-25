@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from .. import crud, schemas
@@ -16,7 +16,9 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=schemas.CustomerResponse)
+@router.post(
+    "/", response_model=schemas.CustomerResponse, status_code=status.HTTP_201_CREATED
+)
 def create_customer(customer: schemas.CustomerCreate, db: Session = Depends(get_db)):
     """
     Create a new customer.
