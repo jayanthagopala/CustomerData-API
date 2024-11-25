@@ -1,3 +1,6 @@
+import os
+
+from dotenv import load_dotenv
 from fastapi import HTTPException
 from sqlalchemy import create_engine
 from sqlalchemy.exc import OperationalError
@@ -5,7 +8,11 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 
 from app.utils.logger import setup_logger
 
-DATABASE_URL = "sqlite:///./customers.db"
+# Load environment variables from .env file
+load_dotenv()
+
+# Get the database URL from the environment variable
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./customers.db")
 
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

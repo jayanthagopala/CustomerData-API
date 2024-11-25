@@ -1,6 +1,8 @@
 import logging
+import os
 import time
 
+from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
@@ -10,6 +12,20 @@ from .routers import customers
 
 # main.py
 from .utils.logger import setup_logger
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Get log level from environment variable, default to INFO
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
+
+# Validate and set log level
+valid_log_levels = {"CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG", "NOTSET"}
+if LOG_LEVEL not in valid_log_levels:
+    LOG_LEVEL = "INFO"  # Fallback to INFO if invalid value is set
+
+# Set the root logger level
+logging.basicConfig(level=getattr(logging, LOG_LEVEL, logging.INFO))
 
 # Setup API logger
 api_logger = setup_logger("fastapi-api", "api.log", level=logging.INFO)
