@@ -14,16 +14,15 @@ A Python-based project built with FastAPI, designed to deliver efficient and sca
 Returns a welcome message.
 
 ### Endpoint Overview
-| Method | Endpoint                | Description                               | Request Body (JSON)                                                                                   |
-|--------|--------------------------|-------------------------------------------|-------------------------------------------------------------------------------------------------------|
-| POST   | `/customers/`           | Create a new customer                     | `{ "first_name": "string", "last_name": "string", "date_of_birth": "string (YYYY-MM-DD)" }`          |
-| GET    | `/customers/`           | List customers with pagination support    | _N/A_                                                                                                |
-| GET    | `/customers/{id}`       | Retrieve a customer by ID                 | _N/A_                                                                                                |
-| PUT    | `/customers/{id}`       | Update an existing customer by ID         | `{ "first_name": "string", "last_name": "string", "date_of_birth": "string (YYYY-MM-DD)" }`          |
-| DELETE | `/customers/{id}`       | Delete a customer by ID                   | _N/A_                                                                                                |
-
+| Method | Endpoint | Description | Request Body (JSON) |
+|--------|----------|-------------|---------------------|
+| POST | /customers/ | Create a new customer | `{ "first_name": "string", "last_name": "string", "date_of_birth": "string (YYYY-MM-DD)" }` |
+| GET | /customers/ | List customers with pagination support | N/A |
+| GET | /customers/{id} | Retrieve a customer by ID | N/A |
+| PUT | /customers/{id} | Update an existing customer by ID | `{ "first_name": "string", "last_name": "string", "date_of_birth": "string (YYYY-MM-DD)" }` |
+| DELETE | /customers/{id} | Delete a customer by ID | N/A |
+| GET | /customers/by-date-range?start_date=YYYY-MM-DD&end_date=YYYY-MM-DD | Retrieve customers born between the specified start and end dates | N/A |
 ---
-
 #### **Pagination Parameters for `GET /customers/`**
 - **`skip`**: Number of records to skip (default: `0`).
 - **`limit`**: Maximum number of records to return (default: `10`).
