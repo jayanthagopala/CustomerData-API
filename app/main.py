@@ -46,6 +46,7 @@ app = FastAPI(
 )
 
 
+# Custom exception handler for request validation errors
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request, exc):
     return JSONResponse(
@@ -63,13 +64,12 @@ async def log_requests(request: Request, call_next):
     start_time = time.time()
     response = await call_next(request)
     duration = time.time() - start_time
-
     api_logger.info(
         f"Method: {request.method} Path: {request.url.path} "
         f"Status: {response.status_code} Duration: {duration:.2f}s"
     )
+
     return response
 
 
-# Include routers
 app.include_router(customers.router)
