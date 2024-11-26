@@ -1,8 +1,8 @@
 {
     "info": {
-        "name": "FastAPI-API Collection",
-        "_postman_id": "fastapi-collection-id",
-        "description": "Postman collection to test FastAPI CRUD operations for customers.",
+        "name": "CustomerData-API Collection",
+        "_postman_id": "CustomerData-collection-id",
+        "description": "Postman collection to test CustomerData CRUD operations for customers.",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     },
     "item": [

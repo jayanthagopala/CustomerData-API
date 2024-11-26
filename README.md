@@ -68,7 +68,7 @@ A Python-based API built with FastAPI, to manage customer data.
 ### **1. Clone the Repository**
 ```bash
 git clone <repository-url>
-cd FastAPI-API
+cd CustomerData-API
 ```
 
 ### **2. Create a Conda Environment**
@@ -98,7 +98,7 @@ poetry install
 
 ## 📂 **Project Structure**
 ```
-FastAPI-API/
+CustomerData-API/
 ├── app/
 │   ├── __init__.py            # Marks the `app` directory as a Python module
 │   ├── main.py                # Entry point for the FastAPI application; defines the app and includes routes
@@ -125,7 +125,7 @@ FastAPI-API/
 ├── pyproject.toml             # Poetry configuration file for dependencies and project settings
 ├── README.md                  # Main project documentation with setup instructions, features, and usage
 └── postman/
-    ├── FastAPI-API-Postman-Collection.json  # Pre-configured Postman collection for testing API endpoints
+    ├── CustomerData-API-Postman-Collection.json  # Pre-configured Postman collection for testing API endpoints
 ```
 
 ---
