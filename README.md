@@ -1,6 +1,6 @@
 # Customer Data Management API
 
-A Python-based project built with FastAPI, to manage customer data.
+A Python-based API built with FastAPI, to manage customer data.
 
 - Provides endpoints for creating, retrieving, updating, and deleting customer records.
 - Supports filtering and pagination to ensure efficient and flexible data retrieval.
@@ -214,3 +214,14 @@ FastAPI provides interactive API documentation for your project:
 
 - **ReDoc**: Comprehensive and clean API documentation.
   Access it at: [http://localhost:8000/redoc](http://localhost:8000/redoc)
+
+## Improvements
+
+- Dockerise the solution
+- Add Authentication and Authorization
+- Optimize Database Operations/Caching
+- Add Unit Tests and Test Coverage Reports
+- Enhance Logging and Monitoring
+- Add Rate Limiting
+- Extend Functionality
+- Add a Centralized Configuration System
