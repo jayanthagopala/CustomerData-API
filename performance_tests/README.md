@@ -1,85 +1,86 @@
-# Performance Tests for FastAPI API
+# Customer API Load Testing
 
-The tests simulate various user interactions to evaluate the API's performance under different scenarios, focusing on CRUD operations for the `/customers` endpoint.
+## Overview
 
----
+This Locust-based load testing framework simulates various user interactions with a Customer API, including create, read, update, and delete (CRUD) operations. The test suite is designed to mimic different user behaviors and test the performance and reliability of the API under various scenarios.
+
+## Prerequisites
+
+- Python 3.8+
+- Poetry (for dependency management)
+
+## Installation
+
+1. Clone the repository
+2. Install dependencies using Poetry:
+   ```bash
+   poetry install
+   ```
+
+## Running the Tests
+
+```bash
+locust -f performance_tests/locustfile.py
+```
+
+This will start the Locust web interface where you can configure:
+- Number of users
+- Spawn rate
+- Host URL
 
 ## Test Scenarios
 
-### 1. **Create Customer**
-- **Description**: Simulates creating a new customer with valid data.
-- **Frequency**: High (Weight: `3`)
-- **Outcome**:
-  - Successful customer creation.
-  - Stores the `customer_id` for future operations.
+### User Types
 
-### 2. **Get Customer**
-- **Description**: Retrieves a single customer by `ID`.
-- **Frequency**: Very High (Weight: `4`)
-- **Outcome**:
-  - Successfully fetches an existing customer.
-  - Handles missing customers (`404`) by removing their IDs from the local list.
+1. **CustomerAPIUser (Base Class)**
+   - Performs balanced CRUD operations
+   - Weights:
+     - Create: 3
+     - Read: 4
+     - Update: 2
+     - Delete: 1
+     - List All: 1
 
-### 3. **Update Customer**
-- **Description**: Updates an existing customer with new data.
-- **Frequency**: Medium (Weight: `2`)
-- **Outcome**:
-  - Updates a customer if the `ID` exists.
-  - Handles missing customers gracefully.
+2. **AdminUser**
+   - Focuses on listing and creating customers
+   - Higher frequency of listing all customers
 
-### 4. **Delete Customer**
-- **Description**: Deletes a customer by `ID`.
-- **Frequency**: Low (Weight: `1`)
-- **Outcome**:
-  - Successfully deletes the customer and removes the `ID` from the local list.
+3. **RegularUser**
+   - Focuses on reading and occasional updates
+   - Primarily retrieves individual customer records
 
-### 5. **Get All Customers**
-- **Description**: Retrieves a paginated list of customers.
-- **Frequency**: Low (Weight: `1`)
-- **Outcome**:
-  - Successfully retrieves customers with random pagination parameters.
+### Key Operations
 
-### 6. **Create Invalid Customer**
-- **Description**: Attempts to create a customer with invalid data (e.g., missing fields, invalid types).
-- **Frequency**: Low (Weight: `1`)
-- **Outcome**:
-  - Expects validation errors (`422`).
-  - Flags unexpected responses.
+- Create Customer
+- Get Customer by ID
+- Update Customer
+- Delete Customer
+- List Customers (with pagination)
+- Validate API error handling
 
----
+## Test Data Generation
 
-## User Classes
+- Randomly generates customer data
+- Creates 100 pre-generated test customers
+- Handles dynamic customer ID tracking
 
-### **CustomerAPIUser**
-- Simulates a general user interacting with the API.
-- Tasks:
-  - Create Customer
-  - Get Customer
-  - Update Customer
-  - Delete Customer
-  - Get All Customers
-  - Create Invalid Customer
+## Error Handling
 
-### **AdminUser**
-- Extends `CustomerAPIUser` to simulate admin behavior.
-- Task Weights:
-  - **High**: Get all customers (Weight: `5`)
-  - **Medium**: Create customers (Weight: `3`)
+- Tracks created customer IDs
+- Removes IDs for non-existent customers
+- Validates response status codes
+- Simulates invalid data creation
 
-### **RegularUser**
-- Extends `CustomerAPIUser` to simulate regular user behavior.
-- Task Weights:
-  - **High**: Get individual customers (Weight: `5`)
-  - **Medium**: Update customers (Weight: `2`)
+## Best Practices
 
----
+- Random wait time between 1-3 seconds between tasks
+- Realistic operation weights
+- Dynamic data generation
+- Error tracking and removal of stale IDs
 
-## Setup
+## Customization
 
-### Prerequisites
-Dev dependencies should be installed
-
-### Install Dependencies
-```bash
-
-```
+Modify the script to:
+- Adjust task weights
+- Change test data generation
+- Add more complex scenarios
